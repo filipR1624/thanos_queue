@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prom-deployment # name of container in k8s
+  labels:
+    app: prometheus # used to associate Deployment with pod
+spec:
+  selector:
+    matchLabels:
+      app: prometheus # has to match metadata.labels
+  template:
+    metadata:
+      labels:
+        app: prometheus
+    spec:
+      containers:
+      - name: prometheus
+        image: prom/prometheus:v3.13.4
+        ports:
+        - name: http
+          containerPort: 9090
+        volumeMounts:
+        - mountPath: /etc/prometheus
+          name: prom-config
+        args:
+        - --config.file=/etc/prometheus/prometheus.yml
+      volumes:
+      - name: prom-config
+        configMap:
+          name: prom-config
+          items:
+            - key: prometheus.yml
+              path: prometheus.yml
