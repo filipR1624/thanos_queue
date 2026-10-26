@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: thanos-receive
+  labels:
+    app: thanos-receive
+spec:
+  selector:
+    matchLabels:
+      app: thanos-receive
+  template:
+    metadata:
+      labels:
+        app: thanos-receive
+    spec:
+      containers:
+      - name: thanos-receive
+        image: thanosio/thanos:v0.42.2
+        ports:
+        - name: grpc
+          containerPort: 10901
+        - name: http
+          containerPort: 10902
+        - name: remote-write
+          containerPort: 19291
+        args:
+        - receive
+        - --grpc-address=0.0.0.0:10901
+        - --http-address=0.0.0.0:10902
+        - --remote-write.address=0.0.0.0:19291
+        - --tsdb.path=/data/receive
+        - --label=receive_replica="0"
+        volumeMounts:
+        - mountPath: /data
+          name: tsdb-volume
+      volumes:
+      - name: tsdb-volume
+        emptyDir: {}

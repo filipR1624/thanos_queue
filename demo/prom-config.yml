@@ -10,3 +10,5 @@ data:
       - job_name: prometheus
         static_configs:
           - targets: ["localhost:9090"]
+    remote_write:
+    - url: http://receive-service:19291/api/v1/receive

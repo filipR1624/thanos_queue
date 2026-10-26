@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: prom-deployment # name of container in k8s
+  name: prom-deployment # name of deployment in k8s
   labels:
     app: prometheus # used to associate Deployment with pod
 spec:
