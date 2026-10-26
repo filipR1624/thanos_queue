@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: thanos-query
+  labels:
+    app: thanos-query
+spec:
+  selector:
+    matchLabels:
+      app: thanos-query
+  template:
+    metadata:
+      labels:
+        app: thanos-query
+    spec:
+      containers:
+      - name: thanos-query
+        image: thanosio/thanos:v0.42.2
+        ports:
+        - name: ui
+          containerPort: 9090
+        args:
+        - query
+        - --http-address=0.0.0.0:9090
+        - --endpoint=receive-service:10901
