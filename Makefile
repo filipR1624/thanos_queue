@@ -15,7 +15,10 @@ deploy:
 	@kubectl apply -f demo
 
 full:
-	make cluster
-	make build
-	make load
-	make deploy
+	@echo "====== CREATING CLUSTER ======"
+	@make cluster
+	@echo "====== BUILDING IMAGE ======"
+	@make build
+	@make load
+	@echo "====== DEPLOYING MANIFESTS ======"
+	@make deploy
