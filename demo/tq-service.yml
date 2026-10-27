@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: tq-service
+spec:
+  selector:
+    app: tq
+  ports:
+  - port: 8080
+    targetPort: http

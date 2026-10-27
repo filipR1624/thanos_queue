@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tq
+  labels:
+    app: tq
+spec:
+  selector:
+    matchLabels:
+      app: tq
+  template:
+    metadata:
+      labels:
+        app: tq
+    spec:
+      containers:
+      - name: prometheus
+        image: thanos_queue:dev
+        ports:
+        - name: http
+          containerPort: 8080
