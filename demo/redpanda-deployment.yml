@@ -25,13 +25,16 @@ spec:
         - --mode=dev-container
         - --advertise-kafka-addr=redpanda-service:9092
         - --kafka-addr=0.0.0.0:9092
-        - --smp=1
-        - --memory=1G
+        - --smp=1 # limiting CPU
+        - --memory=1G # limiting RAM
         volumeMounts:
         - mountPath: /var/lib/redpanda/data
           name: data-volume
         resources:
           limits:
+          # limiting container resources
+          # there is also requests,
+          # it equals limits when omitted
             cpu: 1
             memory: 1.5Gi
       volumes:
