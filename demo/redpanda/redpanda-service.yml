@@ -3,8 +3,9 @@ kind: Service
 metadata:
   name: redpanda-service
 spec:
-  selector:
-    app: redpanda
   ports:
   - port: 9092
-    targetPort: default
+    targetPort: kafka
+  clusterIP: None
+  selector:
+    app: redpanda

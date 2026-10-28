@@ -5,9 +5,19 @@ metadata:
   labels:
     app: redpanda
 spec:
+  serviceName: redpanda-service
   selector:
     matchLabels:
       app: redpanda
+  volumeClaimTemplates:
+  - metadata:
+      name: redpanda-volume
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 1Gi
   template:
     metadata:
       labels:
@@ -17,7 +27,7 @@ spec:
       - name: redpanda
         image: redpandadata/redpanda:v26.2.6
         ports:
-        - name: default
+        - name: kafka
           containerPort: 9092
         args:
         - redpanda
@@ -28,8 +38,8 @@ spec:
         - --smp=1 # limiting CPU
         - --memory=1G # limiting RAM
         volumeMounts:
-        - mountPath: /var/lib/redpanda/data
-          name: data-volume
+        - mountPath: /var/lib/redpanda/data # default for redpanda
+          name: redpanda-volume
         resources:
           limits:
           # limiting container resources
@@ -37,6 +47,3 @@ spec:
           # it equals limits when omitted
             cpu: 1
             memory: 1.5Gi
-      volumes:
-      - name: data-volume
-        emptyDir: {}
