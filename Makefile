@@ -14,8 +14,6 @@ deploy:
 	@kubectl apply -f demo/prometheus
 	@kubectl apply -f demo/thanos
 	@kubectl apply -f demo/redpanda
-	@kubectl wait --for=condition=Ready deploy/redpanda
-	@kubectl exec deploy/redpanda -- rpk topic create remote-write
 	@kubectl apply -f demo/tq
 
 reload: build
