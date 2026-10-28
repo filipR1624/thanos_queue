@@ -26,7 +26,7 @@ func main() {
 	// creating forwarder client
 	fwd, err := kgo.NewClient(
 		kgo.SeedBrokers(seeds...),
-		kgo.ConsumerGroup(forwarder.Group), // fine for now, store in a const later on
+		kgo.ConsumerGroup(forwarder.Group),
 		kgo.ConsumeTopics("remote-write"),
 		kgo.DisableAutoCommit(),
 	)
