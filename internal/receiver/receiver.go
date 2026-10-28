@@ -17,6 +17,7 @@ type Receiver struct {
 }
 
 // Report writes back the number of successful writes to Kafka.
+// Used for testing purposes only.
 func (r *Receiver) Report(w http.ResponseWriter, req *http.Request) {
 	fmt.Fprintf(w, "Writes: %d", r.writes.Load())
 }
