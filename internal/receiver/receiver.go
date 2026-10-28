@@ -58,4 +58,5 @@ func (r *Receiver) Produce(w http.ResponseWriter, req *http.Request) {
 
 	r.writes.Add(1)
 	w.WriteHeader(http.StatusOK)
+	log.Printf("write received")
 }
