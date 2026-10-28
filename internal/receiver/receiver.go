@@ -10,23 +10,26 @@ import (
 	"github.com/twmb/franz-go/pkg/kgo"
 )
 
-// todo
+// Receiver takes remote-write requests and hands them to Kafka.
 type Receiver struct {
 	writes atomic.Int64
 	Client *kgo.Client
 }
 
+// Report writes back the number of successful writes to Kafka.
 func (r *Receiver) Report(w http.ResponseWriter, req *http.Request) {
-	fmt.Fprintf(w, "req: %d", r.writes.Load())
+	fmt.Fprintf(w, "Writes: %d", r.writes.Load())
 }
 
 const (
-	tenantHeader  string = "THANOS-TENANT"
+	tenantHeader  string = "THANOS-TENANT" // matches Prometheus's tenant header
 	defaultTenant string = "default-tenant"
-	topic         string = "remote-write"
+	topic         string = "remote-write" // hardcoded for now, users must ensure the topic exists
 )
 
-// todo
+// Produce receives Prometheus remote-write requests and produces a record for Kafka.
+// Keys are tenants to achieve separation (one topic per tenant, data does not mix).
+// Returns OK on successful writes, otherwise 5xx for Prometheus to retry.
 func (r *Receiver) Produce(w http.ResponseWriter, req *http.Request) {
 	tenant := req.Header.Get(tenantHeader)
 	if tenant == "" {
@@ -36,7 +39,7 @@ func (r *Receiver) Produce(w http.ResponseWriter, req *http.Request) {
 	buffer, err := io.ReadAll(req.Body)
 	if err != nil {
 		log.Printf("error: %v\n", err)
-		w.WriteHeader(http.StatusUnprocessableEntity)
+		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 

@@ -11,9 +11,7 @@ import (
 func main() {
 	seeds := []string{"redpanda-service:9092"} // hardcoded for now
 
-	cl, err := kgo.NewClient(
-		kgo.SeedBrokers(seeds...),
-	)
+	cl, err := kgo.NewClient(kgo.SeedBrokers(seeds...))
 	if err != nil {
 		log.Fatal(err)
 	}
