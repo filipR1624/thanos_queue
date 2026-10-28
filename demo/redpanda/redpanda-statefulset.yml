@@ -1,5 +1,5 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: redpanda
   labels:
@@ -17,7 +17,7 @@ spec:
       - name: redpanda
         image: redpandadata/redpanda:v26.2.6
         ports:
-        - name: kafka
+        - name: default
           containerPort: 9092
         args:
         - redpanda

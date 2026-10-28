@@ -7,4 +7,4 @@ spec:
     app: redpanda
   ports:
   - port: 9092
-    targetPort: kafka
+    targetPort: default

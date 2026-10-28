@@ -1,24 +1,22 @@
-build:
-	@echo "==> building image"
-	@docker build . -t thanos_queue:dev
+.PHONY: cluster delete build deploy reload
 
 cluster:
 	@kind create cluster
 
-clean:
+delete:
 	@kind delete cluster
 
-load:
+build:
+	@docker build . -t thanos_queue:dev
 	@kind load docker-image thanos_queue:dev
 
 deploy:
-	@kubectl apply -f demo
+	@kubectl apply -f demo/prometheus
+	@kubectl apply -f demo/thanos
+	@kubectl apply -f demo/redpanda
+	@kubectl wait --for=condition=Ready deploy/redpanda
+	@kubectl exec deploy/redpanda -- rpk topic create remote-write
+	@kubectl apply -f demo/tq
 
-full:
-	@echo "====== CREATING CLUSTER ======"
-	@make cluster
-	@echo "====== BUILDING IMAGE ======"
-	@make build
-	@make load
-	@echo "====== DEPLOYING MANIFESTS ======"
-	@make deploy
+reload: build
+	@kubectl rollout restart deploy/tq
