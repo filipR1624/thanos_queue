@@ -29,6 +29,8 @@ spec:
         ports:
         - name: kafka
           containerPort: 9092
+        - name: admin
+          containerPort: 9644
         args:
         - redpanda
         - start
@@ -37,6 +39,12 @@ spec:
         - --kafka-addr=0.0.0.0:9092
         - --smp=1 # limiting CPU
         - --memory=1G # limiting RAM
+        readinessProbe:
+          httpGet:
+            path: /v1/status/ready
+            port: admin
+          initialDelaySeconds: 5
+          periodSeconds: 5
         volumeMounts:
         - mountPath: /var/lib/redpanda/data # default for redpanda
           name: redpanda-volume

@@ -14,6 +14,8 @@ deploy:
 	@kubectl apply -f demo/prometheus
 	@kubectl apply -f demo/thanos
 	@kubectl apply -f demo/redpanda
+	@kubectl rollout status sts/redpanda --timeout=2m30s
+	@kubectl exec sts/redpanda -- rpk topic create remote-write --if-not-exists
 	@kubectl apply -f demo/tq
 
 reload: build

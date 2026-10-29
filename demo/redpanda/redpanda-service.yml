@@ -6,6 +6,10 @@ spec:
   ports:
   - port: 9092
     targetPort: kafka
+    name: kafka
+  - port: 9644
+    targetPort: admin
+    name: admin
   clusterIP: None
   selector:
     app: redpanda
