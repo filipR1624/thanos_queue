@@ -13,13 +13,9 @@ write acknowledgements.
 - kubectl
 
 ## How to run
-- Ensure Docker is running
-- Create a local Kubernetes cluster: `kind create cluster`
-- Apply the manifests: `kubectl apply -f demo`
-  - run this from the repository's root
-- Verify it's operational: `kubectl port-forward svc/query-service 9090:9090`
-  - Port-forwarding will continue until manually cancelled using Ctrl + C
-  - Open `localhost:9090` in your browser, you should see the Thanos Query UI
-  - Run a query like `up` and execute it.
-  - You should see the query returned with `receive_replica="0"` and "`tenant_id="default-tenant"`
-- Cleanup: `kubectl delete -f demo && kind delete cluster`
+
+`make` is used to automated most functionality. Targets include:
+- cluster: Creates a kind cluster
+- delete: Deletes the kind cluster (including any resources within)
+- reload: Builds an image of this service and loads it into kind
+- deploy: Deploys all relevant components (Thanos, Prometheus, Redpanda) and initializes a topic in Redpanda
