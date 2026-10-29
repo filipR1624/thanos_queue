@@ -14,7 +14,7 @@ spec:
         app: tq
     spec:
       containers:
-      - name: prometheus
+      - name: tq
         image: thanos_queue:dev
         ports:
         - name: http

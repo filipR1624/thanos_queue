@@ -1,13 +1,23 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: redpanda
   labels:
     app: redpanda
 spec:
+  serviceName: redpanda-service
   selector:
     matchLabels:
       app: redpanda
+  volumeClaimTemplates:
+  - metadata:
+      name: redpanda-volume
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 1Gi
   template:
     metadata:
       labels:
@@ -19,6 +29,8 @@ spec:
         ports:
         - name: kafka
           containerPort: 9092
+        - name: admin
+          containerPort: 9644
         args:
         - redpanda
         - start
@@ -27,9 +39,15 @@ spec:
         - --kafka-addr=0.0.0.0:9092
         - --smp=1 # limiting CPU
         - --memory=1G # limiting RAM
+        readinessProbe:
+          httpGet:
+            path: /v1/status/ready
+            port: admin
+          initialDelaySeconds: 5
+          periodSeconds: 5
         volumeMounts:
-        - mountPath: /var/lib/redpanda/data
-          name: data-volume
+        - mountPath: /var/lib/redpanda/data # default for redpanda
+          name: redpanda-volume
         resources:
           limits:
           # limiting container resources
@@ -37,6 +55,3 @@ spec:
           # it equals limits when omitted
             cpu: 1
             memory: 1.5Gi
-      volumes:
-      - name: data-volume
-        emptyDir: {}
