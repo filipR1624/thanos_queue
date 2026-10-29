@@ -20,3 +20,7 @@ deploy:
 
 reload: build
 	@kubectl rollout restart deploy/tq
+
+sever:
+	@kubectl patch svc receive-service -p '{"spec":{"selector":{"app":"outage-test"}}}'
+	@kubectl rollout restart deploy/tq
